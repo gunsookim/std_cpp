@@ -1,5 +1,8 @@
+#include <SoftwareSerial.h>
 #include <Servo.h>
 
+
+SoftwareSerial BTSerial(4, 5);  // hm10의 tx, rx선과 연결
 Servo mg995;
 
 const int servoPin = 10;
@@ -10,6 +13,7 @@ int ing_loc[] = {1, 2, 3, 4, 5, 6, 7} //재료 위치 번호 저장
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600)
+  BTSerial.begin(9600)
   mg995.attach(servoPin);
 }
 
