@@ -1,14 +1,13 @@
 #include <SoftwareSerial.h>
 #include <Servo.h>
 
-SoftwareSerial BTSerial(4, 5);  // hm10의 tx, rx선과 연결
+SoftwareSerial BTSerial(0, 1);  // (rx, tx),  hm10 블루투스 통신용 연결
 Servo mg[4]; // 서보모터 4개 배열로 선언
 
 const int servoPin = 11;  // 컨베이어 담당 모터의 핀 번호
 const int servo1 = 2; // 재료별 모터의 핀 번호
 const int servo2 = 3;
 const int servo3 = 4;
-const int servo4 = 5;
 
 int pos = 0;  // 초기 위치 값 
 int ing_loc[2][3][2] = {
