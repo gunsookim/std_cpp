@@ -1,22 +1,28 @@
 #include <SoftwareSerial.h>
 #include <Servo.h>
 
-
 SoftwareSerial BTSerial(4, 5);  // hm10의 tx, rx선과 연결
-Servo mg995;
+Servo mg[4]; // 서보모터 4개 배열로 선언
 
-const int servoPin = 10;
-const int servoIng[] = 1, 2, 3;
-// const int servoIng[] = 
-int pos = 0;
-int ing_loc[] = {1, 2, 3, 4, 5, 6, 7, 10} //재료 위치 번호 저장
-// 마지막 요소는 항상 10(인덕션을 의미)
+const int servoPin = 11;  // 컨베이어 담당 모터의 핀 번호
+const int servo1 = 2;
+const int servo2 = 3;
+const int servo3 = 4;
+const int servo4 = 5;
+
+int pos = 0;  // 초기 위치 값 
+
+int ing_loc[] = {2, 3, 4, 5, 6, 7, 0} //재료 위치 번호 저장
+// 마지막 요소는 인덕션(0)을 의미 
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
   BTSerial.begin(9600);
-  mg995.attach(servoPin);
+  mg[0].attach(servoPin);
+  mg[1].attach(servo1);
+  mg[2].attach(servo2);
+  mg[3].attach(servo3);
 }
 
 void loop() {
@@ -25,16 +31,17 @@ void loop() {
 }
 
 void conveyor(b_loc, a_loc){
+  // 다음 재료 위치까지 컨베이어 작동
   if(b_loc >= a_loc){
-    servoPin.write(0); //시계 방향으로 3초간 회전 
+    mg[0].write(0); //시계 방향으로 3초간 회전 
     delay(3000*(b_loc - a_loc));
-    servoPin.write(0); //정지
+    mg[0].write(0); //정지
     
   }
   else{
-    servoPin.write(180); //반시계 방향으로 3초간 회전 
+    mg[0].write(180); //반시계 방향으로 3초간 회전 
     delay(3000*(a_loc - b_loc));
-    servoPin.write(0); //정지
+    mg[0].write(0); //정지
   }
 }
 
@@ -42,7 +49,7 @@ void ingredient(ing){
   // 재료 순서대로 투하
   for(int i = 0; i < (sizeof(ing) - 1); i++){
     if(i != 0) pos = ing_loc[i];
-    servoIng[i].write(180);
+    servoIng[i].write(180); // 해당 재료 담당 모터 작동
     delay(1000);
     conveyor(pos, ing_loc[i+1])
   }
