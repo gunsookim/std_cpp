@@ -11,9 +11,8 @@ const int servo3 = 4;
 const int servo4 = 5;
 
 int pos = 0;  // 초기 위치 값 
-
-int ing_loc[] = {2, 3, 4, 5, 6, 7, 0} //재료 위치 번호 저장
-// 마지막 요소는 인덕션(0)을 의미 
+int ing_loc[][2] = {{2,0}, {3,0}, {4,0}, {5,0}, {0,0}};
+// {위치, 용량}을 의미, 위치의 마지막 요소는 인덕션(0)을 의미 
 
 void setup() {
   // put your setup code here, to run once:
@@ -27,7 +26,10 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-
+  if(Serial.available()) {   //시리얼포트에 데이터가 존재할 경우
+    
+    ingredient()
+  }
 }
 
 void conveyor(b_loc, a_loc){
@@ -35,22 +37,23 @@ void conveyor(b_loc, a_loc){
   if(b_loc >= a_loc){
     mg[0].write(0); //시계 방향으로 3초간 회전 
     delay(3000*(b_loc - a_loc));
-    mg[0].write(0); //정지
+    mg[0].write(90); //정지
     
   }
   else{
     mg[0].write(180); //반시계 방향으로 3초간 회전 
     delay(3000*(a_loc - b_loc));
-    mg[0].write(0); //정지
+    mg[0].write(90); //정지
   }
 }
 
-void ingredient(ing){
+void ingredient(loc, gram){
   // 재료 순서대로 투하
-  for(int i = 0; i < (sizeof(ing) - 1); i++){
+  for(int i = 0; i < (sizeof(loc) - 1); i++){
     if(i != 0) pos = ing_loc[i];
     servoIng[i].write(180); // 해당 재료 담당 모터 작동
-    delay(1000);
-    conveyor(pos, ing_loc[i+1])
+    delay(1000);  // gram 값을 통해 투하량 조절 필요 ***
+    conveyor(pos, ing_loc[i+1]) // 다음 위치로 이동
   }
+  // 인덕션 동작 및 조리완료 알림 코드 필요 ***
 }
