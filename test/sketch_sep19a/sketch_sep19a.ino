@@ -5,14 +5,18 @@ SoftwareSerial BTSerial(4, 5);  // hm10의 tx, rx선과 연결
 Servo mg[4]; // 서보모터 4개 배열로 선언
 
 const int servoPin = 11;  // 컨베이어 담당 모터의 핀 번호
-const int servo1 = 2;
+const int servo1 = 2; // 재료별 모터의 핀 번호
 const int servo2 = 3;
 const int servo3 = 4;
 const int servo4 = 5;
 
 int pos = 0;  // 초기 위치 값 
-int ing_loc[][2] = {{2,0}, {3,0}, {4,0}, {5,0}, {0,0}};
-// {위치, 용량}을 의미, 위치의 마지막 요소는 인덕션(0)을 의미 
+int ing_loc[2][3][2] = {
+    {{2,0}, {3,0}, {4,0}, {5,0}, {0,0}} // 메뉴1
+    {{2,0}, {3,0}, {4,0}, {5,0}, {0,0}} // 메뉴2
+    {{2,0}, {3,0}, {4,0}, {5,0}, {0,0}} // 메뉴3
+    };
+// {메뉴, 순서별 재료 위치, 재료 용량}을 의미, 위치의 마지막 요소는 인덕션(0)을 의미 
 
 void setup() {
   // put your setup code here, to run once:
