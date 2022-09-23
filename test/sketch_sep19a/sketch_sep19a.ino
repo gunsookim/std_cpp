@@ -29,6 +29,15 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+  // 블루투스 통신
+  if (BTSerial.available()) {
+    Serial.write(BTSerial.read());
+  }
+  
+  if (Serial.available()) {
+    BTSerial.write(Serial.read());
+  }
+  
   if(Serial.available()) {   //시리얼포트에 데이터가 존재할 경우
     
     ingredient()
