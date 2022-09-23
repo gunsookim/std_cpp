@@ -1,7 +1,7 @@
 #include <SoftwareSerial.h>
 #include <Servo.h>
 
-SoftwareSerial BTSerial(0, 1);  // (rx, tx),  hm10 블루투스 통신용 연결
+SoftwareSerial BTSerial(0, 1);  // (rx, tx), hm10 블루투스 연결
 Servo mg[4]; // 서보모터 4개 배열로 선언
 
 const int servoPin = 11;  // 컨베이어 담당 모터의 핀 번호
@@ -11,9 +11,9 @@ const int servo3 = 4;
 
 int pos = 0;  // 초기 위치 값 
 int ing_loc[2][3][2] = {
-    {{2,0}, {3,0}, {4,0}, {5,0}, {0,0}} // 메뉴1
-    {{2,0}, {3,0}, {4,0}, {5,0}, {0,0}} // 메뉴2
-    {{2,0}, {3,0}, {4,0}, {5,0}, {0,0}} // 메뉴3
+    {{2,0}, {3,0}, {4,0}, {5,0}, {0,0}}, // 메뉴1
+    {{2,0}, {3,0}, {4,0}, {5,0}, {0,0}}, // 메뉴2
+    {{2,0}, {3,0}, {4,0}, {5,0}, {0,0}}, // 메뉴3
     };
 // {메뉴, 순서별 재료 위치, 재료 용량}을 의미, 위치의 마지막 요소는 인덕션(0)을 의미 
 
@@ -29,7 +29,7 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  // 블루투스 통신
+  // 블루투스 통신, 
   if (BTSerial.available()) {
     Serial.write(BTSerial.read());
   }
