@@ -10,10 +10,10 @@ const int servo2 = 3;
 const int servo3 = 4;
 
 int pos = 0;  // 초기 위치 값 
-int ing_loc[2][3][2] = {
-    {{2,0}, {3,0}, {4,0}, {5,0}, {0,0}}, // 메뉴1
-    {{2,0}, {3,0}, {4,0}, {5,0}, {0,0}}, // 메뉴2
-    {{2,0}, {3,0}, {4,0}, {5,0}, {0,0}}, // 메뉴3
+int ing_loc[2][4][2] = {
+    {{2,0}, {3,0}, {4,0}, {5,0}}, // 메뉴1
+    {{2,0}, {3,0}, {4,0}, {5,0}}, // 메뉴2
+    {{2,0}, {3,0}, {4,0}, {5,0}} // 메뉴3
     };
 // {메뉴, 순서별 재료 위치, 재료 용량}을 의미, 위치의 마지막 요소는 인덕션(0)을 의미 
 
@@ -28,23 +28,22 @@ void setup() {
 }
 
 void loop() {
+  int menu = 1;
   // put your main code here, to run repeatedly:
   // 블루투스 통신, 
   if (BTSerial.available()) {
     Serial.write(BTSerial.read());
-  }
-  
+  }  
   if (Serial.available()) {
     BTSerial.write(Serial.read());
-  }
-  
-  if(Serial.available()) {   //시리얼포트에 데이터가 존재할 경우
-    
+  }  
+  if(Serial.available()) {   //시리얼포트에 데이터가 존재할 경우    
     ingredient()
   }
+  
 }
 
-void conveyor(b_loc, a_loc){
+void conveyor(int b_loc, int a_loc){
   // 다음 재료 위치까지 컨베이어 작동
   if(b_loc >= a_loc){
     mg[0].write(0); //시계 방향으로 3초간 회전 
@@ -59,13 +58,13 @@ void conveyor(b_loc, a_loc){
   }
 }
 
-void ingredient(loc, gram){
+void ingredient(int m){
   // 재료 순서대로 투하
-  for(int i = 0; i < (sizeof(loc) - 1); i++){
-    if(i != 0) pos = ing_loc[i];
-    servoIng[i].write(180); // 해당 재료 담당 모터 작동
+  for(int i = 0; i < (4 - 1); i++){
+    if(i != 0) pos = ing_loc[m][i][0];
+    mg[i].write(180); // 해당 재료 담당 모터 작동
     delay(1000);  // gram 값을 통해 투하량 조절 필요 ***
-    conveyor(pos, ing_loc[i+1]) // 다음 위치로 이동
+    conveyor(pos, ing_loc[m][i+1][0]) // 다음 위치로 이동
   }
   // 인덕션 동작 및 조리완료 알림 코드 필요 ***
 }
