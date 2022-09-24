@@ -10,10 +10,10 @@ const int servo2 = 3;
 const int servo3 = 4;
 
 int pos = 0;  // 초기 위치 값 
-int ing_loc[2][4][2] = {
-    {{1,0}, {2,0}, {3,0}, {4,0}}, // 메뉴1
-    {{2,0}, {3,0}, {4,0}, {5,0}}, // 메뉴2
-    {{2,0}, {3,0}, {4,0}, {5,0}} // 메뉴3
+int ing_loc[3][4][2] = {
+    {{1,1}, {2,1}, {3,1}, {4,1}}, // 메뉴1
+    {{2,1}, {3,1}, {4,1}, {5,1}}, // 메뉴2
+    {{2,1}, {3,1}, {4,1}, {5,1}} // 메뉴3
     };
 // {메뉴, 순서별 재료 위치, 재료 용량}을 의미, 위치의 마지막 요소는 인덕션(0)을 의미 
 // 1-면, 2-스프, 3-물, 
@@ -39,7 +39,7 @@ void loop() {
     BTSerial.write(Serial.read());
   }  
   if(Serial.available()) {   //시리얼포트에 데이터가 존재할 경우    
-    ingredient()
+    //ingredient();
   }
   ingredient(menu);
 }
@@ -62,7 +62,7 @@ void conveyor(int b_loc, int a_loc){
 void ingredient(int m){
   // 용기 세팅 코드 필요***
   // 재료 순서대로 투하
-  for(int i = 1; i < 4; i++){
+  for(int i = 0; i < 3; i++){
     mg[i].write(180); // 해당 재료 담당 모터 작동
     delay(1000*ing_loc[m][i+1][1]);  // 투하량 조절
     conveyor(pos, ing_loc[m][i+1][0]); // 다음 위치로 이동
