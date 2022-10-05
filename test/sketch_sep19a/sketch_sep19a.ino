@@ -3,7 +3,7 @@
 #include <SoftwareSerial.h>
 #include <Servo.h>
 
-SoftwareSerial BTSerial(0, 1);  // (rx, tx), hm10 블루투스 연결
+SoftwareSerial HM10(0, 1);  // (rx, tx), hm10 블루투스 연결
 Servo mg[4]; // 서보모터 4개 배열로 선언
 
 const int servoPin = 11;  // 컨베이어 담당 모터의 핀 번호
@@ -12,7 +12,7 @@ const int servo2 = 3;
 const int servo3 = 4;
 
 int pos = 0;  // 초기 위치 값 
-int ing_loc[3][5][2] = {
+int recipe[3][5][2] = {
     {{0,0}, {1,1}, {2,1}, {3,1}, {4,1}}, // 메뉴1
     {{2,1}, {1,1}, {3,1}, {4,1}, {5,1}}, // 메뉴2
     {{2,1}, {1,1}, {3,1}, {4,1}, {5,1}} // 메뉴3
@@ -23,7 +23,7 @@ int ing_loc[3][5][2] = {
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
-  BTSerial.begin(9600);
+  HM10.begin(9600);
   mg[0].attach(servoPin);
   mg[1].attach(servo1);
   mg[2].attach(servo2);
@@ -34,11 +34,11 @@ void loop() {
   int menu = 0;
   // put your main code here, to run repeatedly:
   // 블루투스 통신, 
-  if (BTSerial.available()) {
-    Serial.write(BTSerial.read());
+  if (HM10.available()) {
+    Serial.write(HM10.read());
   }  
   if (Serial.available()) {
-    BTSerial.write(Serial.read());
+    HM10.write(Serial.read());
   }  
   if(Serial.available()) {   //시리얼포트에 데이터가 존재할 경우    
     //ingredient();
@@ -67,11 +67,14 @@ void ingredient(int m){
   conveyor(0, 1);  // 용기를 첫 재료 아래로 이동
   // 재료 순서대로 투하
   for(int i = 1; i < 4; i++){
-    pos = ing_loc[m][i][0];
+    pos = recipe[m][i][0];
+    if(recipe[m][i][0] == 0){
+      conveyor(recipe[m][i][0], 0);
+     }
     mg[i].write(180); // 해당 재료 담당 모터 작동
-    delay(3000*ing_loc[m][i+1][1]);  // 투하량 조절
+    delay(3000*recipe[m][i+1][1]);  // 투하량 조절
     mg[i].write(90); // 해당 재료 담당 모터 정지
-    conveyor(pos, ing_loc[m][i+1][0]); // 다음 위치로 이동
+    conveyor(pos, recipe[m][i+1][0]); // 다음 위치로 이동
   }
   // 인덕션 동작 및 조리완료 알림 코드 필요 ***
 }
