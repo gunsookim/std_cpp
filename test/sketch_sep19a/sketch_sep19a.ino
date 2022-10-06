@@ -42,10 +42,10 @@ void loop() {
   // 블루투스 통신, 
   if(Serial.available()) {   //시리얼포트에 데이터가 존재할 경우
     menu = HM10.read();      // 메뉴 입력
-    //ingredient();
+    ingredient(menu);
   }
-  ingredient(menu);
-  exit(0);
+  // ingredient(menu);
+  // exit(0);
 }
 
 void conveyor(int b_loc, int a_loc){
