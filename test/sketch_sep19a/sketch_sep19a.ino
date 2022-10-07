@@ -14,6 +14,8 @@ const int servo3 = 4;
 const int servo4 = 5;     // 용기 세팅 서보 모터 핀번호
 const int speedDC = 6;    // dc모터 드라이버 속도 제어용 핀 번호 - 워터펌프 제어
 const int relayPin = 7;   // 릴레이 모듈 핀 번호
+const int IN3 = 12;       // 모터 드라이버 연결 핀 번호 1
+const int IN4 = 13;       // 모터 드라이버 연결 핀 번호 2
 
 int pos = 0;  // 컨베이어 벨트 초기 위치 값 
 int recipe[3][5][2] = {
@@ -34,18 +36,20 @@ void setup() {
   mg[3].attach(servo3);
   servo.attach(servo4);
   pinMode(relayPin, OUTPUT);
+  pinMode(IN3, OUTPUT); // 모터 드라이버 제어용 핀 '출력모드'
+  pinMode(IN4, OUTPUT); // 모터 드라이버 제어용 핀 '출력모드'
 }
 
 void loop() {
   int menu = 0;
   // put your main code here, to run repeatedly:
   // 블루투스 통신, 
-  if(Serial.available()) {   //시리얼포트에 데이터가 존재할 경우
+  /*if(HM10.available()) {   // 블루투스 신호가 존재할 경우
     menu = HM10.read();      // 메뉴 입력
     ingredient(menu);
-  }
-  // ingredient(menu);
-  // exit(0);
+  }*/
+  ingredient(menu);
+  exit(0);
 }
 
 void conveyor(int b_loc, int a_loc){
@@ -64,12 +68,13 @@ void conveyor(int b_loc, int a_loc){
 }
 
 void ingredient(int m){
-  // 용기 세팅 코드
+  /*// 용기 세팅 코드
   servo.write(180);
   delay(30);
   servo.write(0);
   delay(30);
   conveyor(0, 1);  // 용기를 첫 재료 아래로 이동
+  */
   // 재료 순서대로 투하
   for(int i = 1; i < 4; i++){
     pos = recipe[m][i][0];
@@ -81,5 +86,13 @@ void ingredient(int m){
     mg[i].write(90);                  // 해당 재료 담당 모터 정지
     conveyor(pos, recipe[m][i+1][0]); // 다음 위치로 이동
   }
+  // 워터 펌프 동작
+  digitalWrite(IN3, HIGH); 
+  digitalWrite(IN4, LOW);
+  delay(2000);
+  // 워터 펌프 정지
+  digitalWrite(IN3, HIGH); 
+  digitalWrite(IN4, HIGH);
   // 인덕션 동작 및 조리완료 알림 코드 필요 ***
+  
 }
