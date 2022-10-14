@@ -18,13 +18,12 @@ const int IN3 = 12;       // 모터 드라이버 연결 핀 번호 1
 const int IN4 = 13;       // 모터 드라이버 연결 핀 번호 2
 
 int pos = 0;  // 컨베이어 벨트 초기 위치 값 
-int recipe[3][5][2] = {
+int recipe[3][5][2] = { // recipe[메뉴 종류][재료 종류][재료 용량]
     {{0,0}, {1,1}, {2,1}, {3,1}, {4,1}}, // 메뉴1
-    {{2,1}, {1,1}, {3,1}, {4,1}, {5,1}}, // 메뉴2
+    {{0,0}, {1,0}, {2,1}, {3,1}, {4,1}}, // 메뉴2
     {{2,1}, {1,1}, {3,1}, {4,1}, {5,1}} // 메뉴3
     };
-// {메뉴, 순서별 재료 위치, 재료 용량}을 의미, 위치의 마지막 요소는 인덕션(0)을 의미 
-// 1번 요소: 0-초기 위치, 1-면, 2-스프, 3-물, 4-인덕션 [][재료][]
+// 1번 요소: 0-초기 위치, 1-면, 2-스프, 3-물, 4-인덕션
 
 void setup() {
   // put your setup code here, to run once:
@@ -40,23 +39,13 @@ void setup() {
   pinMode(IN4, OUTPUT); // 모터 드라이버 제어용 핀 '출력모드'
 }
 
-void loop() {
-  int menu = 0;
-  // put your main code here, to run repeatedly:
-  // 블루투스 통신, 
-  /*if(HM10.available()) {   // 블루투스 신호가 존재할 경우
-    menu = HM10.read();      // 메뉴 입력
-    ingredient(menu);
-  }*/
-  ingredient(menu);
-  exit(0);
-}
 
+// 컨베이어 벨트 동작 함수
 void conveyor(int b_loc, int a_loc){
   // 다음 재료 위치까지 컨베이어 작동
   if(b_loc >= a_loc){
     mg[0].write(0); //시계 방향으로 3초간 회전 
-    delay(3000*(b_loc - a_loc));
+    delay(3500*(b_loc - a_loc));
     mg[0].write(90); //정지
     
   }
@@ -67,8 +56,9 @@ void conveyor(int b_loc, int a_loc){
   }
 }
 
+// 재료 투하 함수
 void ingredient(int m){
-  /*// 용기 세팅 코드
+  /* 용기 세팅 코드
   servo.write(180);
   delay(30);
   servo.write(0);
@@ -82,7 +72,7 @@ void ingredient(int m){
       conveyor(recipe[m][i][0], 0);
      }
     mg[i].write(180);                 // 해당 재료 담당 모터 작동
-    delay(3000*recipe[m][i+1][1]);    // 투하량 조절
+    delay(1000*recipe[m][i+1][1]);    // 투하량 조절
     mg[i].write(90);                  // 해당 재료 담당 모터 정지
     conveyor(pos, recipe[m][i+1][0]); // 다음 위치로 이동
   }
@@ -93,6 +83,32 @@ void ingredient(int m){
   // 워터 펌프 정지
   digitalWrite(IN3, HIGH); 
   digitalWrite(IN4, HIGH);
-  // 인덕션 동작 및 조리완료 알림 코드 필요 ***
-  
+  // 인덕션 동작 및 조리완료 알림 코드 필요 ***  
+}
+
+// 메인 함수
+void loop() {
+  int menu = 0;
+  // put your main code here, to run repeatedly:
+  /*
+  while (HM10.available()){ 
+    byte data = HM10.read();
+    Serial.write(data);
+  }   
+  while (Serial.available()){
+    byte data = Serial.read();
+    HM10.write(data); 
+  }*/
+  // 블루투스 통신 동작 확인
+  if(HM10.available()) {     // 블루투스 신호가 존재할 경우
+    byte input_txt = HM10.read();      // 메뉴 입력
+    Serial.write(input_txt);
+    menu = (int) input_txt;
+    ingredient(menu);
+  }
+  // 재료 투하 동작 확인
+  ingredient(menu);
+  // 완료 알림
+  Serial.println("조리 완료"); 
+  exit(0);
 }
