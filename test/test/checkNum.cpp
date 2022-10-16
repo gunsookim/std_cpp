@@ -5,15 +5,16 @@
 #include <stdio.h>
 
 int main(){
-    int N;
-    int score = 0;
-    scanf("%d", &N);
-    for(int i = 1; i <= N; i++){
-        if((i%10) == 3){
-            score++;
-        }
-        if((i/10) == 3){
-            score++;
+    int n, j;
+    int temp, score = 0;
+    scanf("%d", &n);
+    for(int i=1; i <= n; i++){
+        j=i;
+        while(j){
+            if(j%10 == 3){
+                score++;
+            }
+            j /= 10;
         }
     }
     printf("%d", score);
