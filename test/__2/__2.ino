@@ -66,7 +66,7 @@ int clockPin        = A3; // Connects to the Clock pin the 165
 BYTES_VAL_T pinValues;
 BYTES_VAL_T oldPinValues;
 
-
+String key[4] = {"진라면", "신라면", "짜파게티", "너구리"}; int value[4] = {1,2,3,4};
 int pos = 0;  // 컨베이어 벨트 초기 위치 값
 int recipe[3][5][2] = { // recipe[메뉴 종류][재료 위치][재료 용량]
     {{0,0}, {1,1}, {2,1}, {3,1}, {4,1}}, // 메뉴1
@@ -101,6 +101,9 @@ void setup() {
   pinMode(IN3, OUTPUT); // 모터 드라이버 제어용 핀 '출력모드'
   pinMode(IN4, OUTPUT); // 모터 드라이버 제어용 핀 '출력모드'
 }
+
+// 딕셔너리 동작 구현 함수: 스프 이름 -> 정수 대응
+int dictionary(String _key){ int i; for(i=0;i<5;i++){if(_key==key[i]){ return value[i]; }}}
 
 // 그릇 투하 함수
 void set_bowl(){  
@@ -145,6 +148,11 @@ void set_water(int w){
   // 워터 펌프 정지
   digitalWrite(IN3, HIGH); 
   digitalWrite(IN4, HIGH);
+}
+
+// 라면 스프 투하
+void soup_type(int type){
+  soup[type+1].write(90);
 }
 
 // 재료 투하 함수
