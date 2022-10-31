@@ -37,8 +37,13 @@
 */
 #define BYTES_VAL_T unsigned int
 
+
 #include <SoftwareSerial.h>
 #include <Servo.h>
+#include <Wire.h>                       // I2C 통신을 위한 헤더파일
+#include <Adafruit_PWMServoDriver.h>    // 서보모터 다중제어를 위한 헤더파일
+
+Adafruit_PWMServoDriver pwm=Adafruit_PWMServoDriver();
 
 SoftwareSerial HM10(0, 1);  // (rx, tx), hm10 블루투스 연결
 Servo soup[4]; // 서보모터 객체 4개 생성
@@ -65,6 +70,7 @@ int clockPin        = A3; // Connects to the Clock pin the 165
 
 BYTES_VAL_T pinValues;
 BYTES_VAL_T oldPinValues;
+
 
 String key[4] = {"진라면", "신라면", "짜파게티", "너구리"}; int value[4] = {1,2,3,4};
 int pos = 0;  // 컨베이어 벨트 초기 위치 값
@@ -104,6 +110,7 @@ void setup() {
 
 // 딕셔너리 동작 구현 함수: 스프 이름 -> 정수 대응
 int dictionary(String _key){ int i; for(i=0;i<5;i++){if(_key==key[i]){ return value[i]; }}}
+
 
 // 그릇 투하 함수
 void set_bowl(){  
