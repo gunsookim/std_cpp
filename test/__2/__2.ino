@@ -53,20 +53,27 @@ Servo stuff; // 서보모터 객체 1개 생성
 
 const int servoPin1 = 10;  // 컨베이어 담당 모터 1을 10번 핀에 연결: 라면용
 const int servoPin2 = 11;  // 컨베이어 담당 모터 2을 11번 핀에 연결: 용기 이동용
+/*  스프 및 건더기 담당 서보 모터 연결 핀 번호
 const int servo1 = 2;     // 서보 모터 4개를 각각 2~5핀에 연결: 스프 종류 결정
 const int servo2 = 3;
 const int servo3 = 4;
 const int servo4 = 5;
 const int servo5 = 9;     // 서보 모터 5를 9핀에 연결: 건더기 담당
+*/
 const int servoBowl = 6;     // 용기 세팅 서보 모터를 6번 핀에 연결
 const int speedDC = 7;    // dc모터 드라이버 속도 제어용 핀 번호 7 - 워터펌프 제어
 const int relayPin = 8;   // 릴레이 모듈 핀 번호 8
 const int IN3 = 12;       // 모터 드라이버 연결 핀 번호 1
 const int IN4 = 13;       // 모터 드라이버 연결 핀 번호 2
+// PCA9685 모듈 연결 핀 번호
+// const int ;
+
+/* 74hc165 연결 핀 번호
 int ploadPin        = A0;  // Connects to Parallel load pin the 165
 int clockEnablePin  = A1;  // Connects to Clock Enable pin the 165
 int dataPin         = A2; // Connects to the Q7 pin the 165
 int clockPin        = A3; // Connects to the Clock pin the 165
+*/
 
 BYTES_VAL_T pinValues;
 BYTES_VAL_T oldPinValues;
@@ -89,19 +96,26 @@ void setup() {
   HM10.begin(9600);
   belt[0].attach(servoPin1); // 컨베이어 벨트 동작을 담당
   belt[1].attach(servoPin2); // 면 투하
+/*
   soup[1].attach(servo1);
   soup[2].attach(servo2);
   soup[3].attach(servo3);
   soup[4].attach(servo4);
+  */
   servo.attach(servoBowl);
+  // pca9685 setup code
+  pwm.begin();
+  pwm.setPWMFreq(51);
   // 모든 핀들을 출력 모드로 초기화
   pinMode(servoPin1, OUTPUT);
   pinMode(servoPin2, OUTPUT);
+ /*
   pinMode(servo1, OUTPUT);
   pinMode(servo2, OUTPUT);
   pinMode(servo3, OUTPUT);
   pinMode(servo4, OUTPUT);
   pinMode(servo5, OUTPUT);
+  */
   pinMode(servoBowl, OUTPUT);
   pinMode(relayPin, OUTPUT); // 릴레이 모듈 제어 핀 출력모드
   pinMode(IN3, OUTPUT); // 모터 드라이버 제어용 핀 '출력모드'
@@ -157,10 +171,11 @@ void set_water(int w){
   digitalWrite(IN4, HIGH);
 }
 
-// 라면 스프 투하
+/* 라면 스프 투하
 void soup_type(int type){
   soup[type+1].write(90);
 }
+
 
 // 재료 투하 함수
 void ingredient(int m){
@@ -186,6 +201,7 @@ void ingredient(int m){
   
   // 인덕션 동작 및 조리완료 알림 코드 필요 ***  
 }
+*/
 
 // 메인 함수
 void loop() {
@@ -199,16 +215,31 @@ void loop() {
   while (Serial.available()){
     byte data = Serial.read();
     HM10.write(data); 
-  }*/
+  }
+  */
+  int a = Serial.parseInt();
+  //  받은 값의 범위 0~180을 펄스길이150~600으로 매핑해주고, ra의 최소,최대를 150,600을 넘지 않게 해준다.
+  int ra = constrain(map(a, 0, 180, 150, 600), 150, 600); 
+  
+  pwm.setPWM(0,0,ra); //  pca9685모듈의 0번 포트에 연결된 서보를 ra만큼 회전   
+  pwm.setPWM(1,0,ra); //  pca9685의 1번에 연결된 서보를 ry만큼 회전
+   
+  Serial.print('(');
+  Serial.print(a);
+  Serial.print(',');
+  Serial.print(ra);
+  Serial.println(')');
+  delay(10);
   // 블루투스 통신 동작 확인
   if(HM10.available()) {
     byte input_txt = HM10.read();      // 메뉴 입력
     Serial.write(input_txt);
     menu = (int) input_txt;
-    ingredient(menu);
+//    ingredient(menu);
   }
-  // 재료 투하 동작 확인
+/* 재료 투하 동작 확인
   ingredient(menu);
+  */
   // 완료 알림
   Serial.println("조리 완료"); 
   exit(0);
