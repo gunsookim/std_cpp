@@ -86,7 +86,6 @@ void loop() {
     Serial.println(menu);
     Serial.println(option1);
 
-    /*
     //  용기 투하 
     pwm.setPWM(servo_bowl,0,300);
     delay(300);
@@ -133,7 +132,6 @@ void loop() {
     pwm.setPWM(servo_mg[3],0,180);
     delay(1000);
     pwm.setPWM(servo_mg[3],0,0);
-    */
     Serial.print("주문 번호: ");
     Serial.println(num_user);
     Serial.println("조리완료");
