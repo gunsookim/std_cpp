@@ -100,16 +100,20 @@ void loop() {
     
     //  컨베이어 작동 및 재료 투하
     pwm.setPWM(servo_mg[0],0,180);
+    pwm.setPWM(servo_mg[1],0,180);
     delay(1000);
     pwm.setPWM(servo_mg[0],0,0);
+    pwm.setPWM(servo_mg[1],0,0);
     
     pwm.setPWM(servo_soup[menu],0,300);   // 해당 스프 투하
     delay(100*option1);                   // 옵션1 - 양 조절
     pwm.setPWM(servo_soup[menu],0,150);
     
     pwm.setPWM(servo_mg[0],0,180);
+    pwm.setPWM(servo_mg[1],0,180);
     delay(1000);
     pwm.setPWM(servo_mg[0],0,0);
+    pwm.setPWM(servo_mg[1],0,0);
     
     pwm.setPWM(servo_mini[0],0,300);   // 건더기 1 투하
     delay(100);
@@ -119,14 +123,18 @@ void loop() {
     pwm.setPWM(servo_mini[1],0,150);
     
     pwm.setPWM(servo_mg[0],0,180);
+    pwm.setPWM(servo_mg[1],0,180);
     delay(1000);
     pwm.setPWM(servo_mg[0],0,0);
+    pwm.setPWM(servo_mg[1],0,0);
     
     set_water(1);                      // 워터 펌프 작동
     
     pwm.setPWM(servo_mg[0],0,180);
+    pwm.setPWM(servo_mg[1],0,180);
     delay(1000);
     pwm.setPWM(servo_mg[0],0,0);
+    pwm.setPWM(servo_mg[1],0,0);
     
     //  인덕션 동작
     pwm.setPWM(servo_mg[3],0,180);
