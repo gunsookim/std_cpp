@@ -15,6 +15,12 @@ const int DirPin2 = 13;    // 모터드라이버 제어신호 핀 번호2
 const int relayPin = 3;   // 릴레이 모듈 핀 번호 8
 // PCA9685 모듈 연결 핀 번호 = A4, A5
 
+// pca 서보모터 연결 핀 번호
+const int servo_mg[4] = {0,1,2,3};    //  컨베이어2, 면1, 인덕션1 - 
+const int servo_soup[4] = {4,5,6,7};  //  스프
+const int servo_mini[2] = {8,9};      //  건더기2
+const int servo_bowl[2] = {10, 11};            //  용기 
+
 /* 74hc165 연결 핀 번호
 int ploadPin        = A0;  // Connects to Parallel load pin the 165
 int clockEnablePin  = A1;  // Connects to Clock Enable pin the 165
@@ -68,10 +74,6 @@ void loop() {
    *   서보모터 포트 번호: 컨베이어-{0,1} / 면-{2} / 용기-{3} / 스프-{4,5,6,7} / 건더기-{8,9}
    *   mg995는 0~180로 mapping, mini 서보는 150~600 으로 mapping
   */
-  int servo_mg[4] = {0,1,2,3};    //  컨베이어2, 면1, 인덕션1 - 
-  int servo_soup[4] = {4,5,6,7};  //  스프
-  int servo_mini[2] = {8,9};      //  건더기2
-  int servo_bowl = 10;            //  용기 
   
   if(Serial.available()){
     String order = Serial.readStringUntil('\n');
@@ -87,9 +89,11 @@ void loop() {
     Serial.println(option1);
 
     //  용기 투하 
-    pwm.setPWM(servo_bowl,0,300);
+    pwm.setPWM(servo_bowl[0],0,300);
+    pwm.setPWM(servo_bowl[1],0,300);
     delay(300);
-    pwm.setPWM(servo_bowl,0,150);
+    pwm.setPWM(servo_bowl[0],0,150);
+    pwm.setPWM(servo_bowl[1],0,150);
     
     //  면 투하
     pwm.setPWM(servo_mg[2],0,180);
@@ -100,7 +104,7 @@ void loop() {
     
     //  컨베이어 작동 및 재료 투하
     pwm.setPWM(servo_mg[0],0,180);
-    pwm.setPWM(servo_mg[1],0,180);
+    pwm.setPWM(servo_mg[1],0,420);
     delay(1000);
     pwm.setPWM(servo_mg[0],0,0);
     pwm.setPWM(servo_mg[1],0,0);
@@ -110,7 +114,7 @@ void loop() {
     pwm.setPWM(servo_soup[menu],0,150);
     
     pwm.setPWM(servo_mg[0],0,180);
-    pwm.setPWM(servo_mg[1],0,180);
+    pwm.setPWM(servo_mg[1],0,420);
     delay(1000);
     pwm.setPWM(servo_mg[0],0,0);
     pwm.setPWM(servo_mg[1],0,0);
@@ -123,7 +127,7 @@ void loop() {
     pwm.setPWM(servo_mini[1],0,150);
     
     pwm.setPWM(servo_mg[0],0,180);
-    pwm.setPWM(servo_mg[1],0,180);
+    pwm.setPWM(servo_mg[1],0,420);
     delay(1000);
     pwm.setPWM(servo_mg[0],0,0);
     pwm.setPWM(servo_mg[1],0,0);
@@ -131,7 +135,7 @@ void loop() {
     set_water(1);                      // 워터 펌프 작동
     
     pwm.setPWM(servo_mg[0],0,180);
-    pwm.setPWM(servo_mg[1],0,180);
+    pwm.setPWM(servo_mg[1],0,420);
     delay(1000);
     pwm.setPWM(servo_mg[0],0,0);
     pwm.setPWM(servo_mg[1],0,0);
