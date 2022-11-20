@@ -75,8 +75,8 @@ void loop() {
    *   mg995는 0~180로 mapping, mini 서보는 150~600 으로 mapping
   */
   
-  if(Serial.available()){
-    String order = Serial.readStringUntil('\n');
+  if(HM10.available()){
+    String order = HM10.readStringUntil('\n');
     int comma1 = order.indexOf(',');
     int comma2 = order.indexOf(',', comma1+1);
     int len = order.length();
