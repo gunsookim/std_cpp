@@ -19,27 +19,7 @@ const int relayPin = 3;   // 릴레이 모듈 핀 번호 8
 const int servo_mg[4] = {0,1,2,3};    //  컨베이어2, 면1, 인덕션1 - 
 const int servo_soup[4] = {4,5,6,7};  //  스프
 const int servo_mini[2] = {8,9};      //  건더기2
-const int servo_bowl[2] = {10, 11};            //  용기 
-
-/* 74hc165 연결 핀 번호
-int ploadPin        = A0;  // Connects to Parallel load pin the 165
-int clockEnablePin  = A1;  // Connects to Clock Enable pin the 165
-int dataPin         = A2; // Connects to the Q7 pin the 165
-int clockPin        = A3; // Connects to the Clock pin the 165
-*/
-
-/*
-String key[4] = {"진라면", "신라면", "짜파게티", "너구리"}; int value[4] = {1,2,3,4};
-int pos = 0;  // 컨베이어 벨트 초기 위치 값
-int recipe[3][5][2] = { // recipe[메뉴 종류][재료 위치][재료 용량]
-    {{0,0}, {1,1}, {2,1}, {3,1}, {4,1}}, // 메뉴1
-    {{0,0}, {1,0}, {2,1}, {3,1}, {4,1}}, // 메뉴2
-    {{0,0}, {1,1}, {3,1}, {4,1}, {5,1}}  // 메뉴3
-    };
-    
-   [재료 위치]- 첫번째 인덱스: 그릇 셋팅, 마지막 인덱스: 인덕션, 나머지: 재료
-   [재료 용량]- g(그람)을 기준으로 설정
-*/
+const int servo_bowl[2] = {10, 11};   //  용기 
 
 void setup() {
   // put your setup code here, to run once:
@@ -75,8 +55,8 @@ void loop() {
    *   mg995는 0~180로 mapping, mini 서보는 150~600 으로 mapping
   */
   
-  if(HM10.available()){
-    String order = HM10.readStringUntil('\n');
+  if(Serial.available()){
+    String order = Serial.readStringUntil('\n');
     int comma1 = order.indexOf(',');
     int comma2 = order.indexOf(',', comma1+1);
     int len = order.length();
@@ -87,7 +67,6 @@ void loop() {
     Serial.println(num_user);
     Serial.println(menu);
     Serial.println(option1);
-
     //  용기 투하 
     pwm.setPWM(servo_bowl[0],0,300);
     pwm.setPWM(servo_bowl[1],0,300);
@@ -97,9 +76,9 @@ void loop() {
     
     //  면 투하
     pwm.setPWM(servo_mg[2],0,180);
-    delay(3000);
+    delay(2000);
     pwm.setPWM(servo_mg[2],0,360);
-    delay(3000);
+    delay(2000);
     pwm.setPWM(servo_mg[2],0,0);
     
     //  컨베이어 작동 및 재료 투하
