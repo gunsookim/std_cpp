@@ -54,8 +54,9 @@ void loop() {
        서보모터 포트 번호: 컨베이어-{0,1} / 면-{2} / 용기-{3} / 스프-{4,5,6,7} / 건더기-{8,9}
        mg995는 0~180로 mapping, mini 서보는 150~600 으로 mapping
   */
+  int orders[10][3] = {{}};
   if (Serial.available()) {
-    /*
+    
       String order = Serial.readStringUntil('\n');
       int comma1 = order.indexOf(',');
       int comma2 = order.indexOf(',', comma1+1);
@@ -68,7 +69,7 @@ void loop() {
       Serial.println(menu);
       Serial.println(option1);
 
-      /*
+      
       pwm.setPWM(servo_mg[0],0,180);
       pwm.setPWM(servo_mg[1],0,400);
       delay(1000);
@@ -88,16 +89,16 @@ void loop() {
       pwm.setPWM(servo_mg[2],0,360);
       delay(2000);
       pwm.setPWM(servo_mg[2],0,0);
-    */
-    //  컨베이어 작동 및 재료 투하
-    pwm.setPWM(servo_mg[0], 0, 180);
-    pwm.setPWM(servo_mg[1], 0, 400);
-    delay(3000);
-    pwm.setPWM(servo_mg[0], 0, 0);
-    pwm.setPWM(servo_mg[1], 0, 0);
-    delay(4000);
+    
+      //  컨베이어 작동 및 재료 투하
+      pwm.setPWM(servo_mg[0], 0, 180);
+      pwm.setPWM(servo_mg[1], 0, 400);
+      delay(3000);
+      pwm.setPWM(servo_mg[0], 0, 0);
+      pwm.setPWM(servo_mg[1], 0, 0);
+      delay(4000);
 
-    /*
+    
       pwm.setPWM(servo_mg[0],0,180);
       pwm.setPWM(servo_mg[1],0,400);
       delay(500);
@@ -130,7 +131,7 @@ void loop() {
       pwm.setPWM(servo_mg[3],0,180);
       delay(1000);
       pwm.setPWM(servo_mg[3],0,0);
-    */
+    
     Serial.print("주문 번호: ");
     // Serial.println(num_user);
     Serial.println("조리완료");
