@@ -1,6 +1,3 @@
-// C++ code
-//
-
 #include <SoftwareSerial.h>
 #include <Servo.h>
 #include <Wire.h>                       // I2C 통신을 위한 헤더파일
@@ -48,13 +45,11 @@ void set_water(int w) {
 
 // 메인 함수
 void loop() {
-  // String menu = "라면";
   // put your main code here, to run repeatedly:
   /*   servo 제어 코드: pwm.setPWM({pca포트번호}, {on == 0}, {각도(0~180을 150~600으로 변환)})
        서보모터 포트 번호: 컨베이어-{0,1} / 면-{2} / 용기-{3} / 스프-{4,5,6,7} / 건더기-{8,9}
        mg995는 0~180로 mapping, mini 서보는 150~600 으로 mapping
   */
-  int orders[10][3] = {{}};
   if (Serial.available()) {
     
       String order = Serial.readStringUntil('\n');
@@ -133,7 +128,7 @@ void loop() {
       pwm.setPWM(servo_mg[3],0,0);
     
     Serial.print("주문 번호: ");
-    // Serial.println(num_user);
+    Serial.println(num_user);
     Serial.println("조리완료");
   }
 }

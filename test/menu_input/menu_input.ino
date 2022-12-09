@@ -60,7 +60,7 @@ void loop() {
        mg995는 0~180로 mapping, mini 서보는 150~600 으로 mapping
   */
   if (Serial.available()){
-    num_menu++;
+    num_menu++;l
     if (num_menu > 10){
       
     }
