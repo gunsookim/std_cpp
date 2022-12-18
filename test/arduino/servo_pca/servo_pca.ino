@@ -50,9 +50,9 @@ void loop() {
        서보모터 포트 번호: 컨베이어-{0,1} / 면-{2} / 용기-{3} / 스프-{4,5,6,7} / 건더기-{8,9}
        mg995는 0~180로 mapping, mini 서보는 150~600 으로 mapping
   */
-  if (Serial.available()) {
+  if (HM10.available()) {
     
-      String order = Serial.readStringUntil('\n');
+      String order = HM10.readStringUntil('\n');
       int comma1 = order.indexOf(',');
       int comma2 = order.indexOf(',', comma1+1);
       int len = order.length();
@@ -64,7 +64,6 @@ void loop() {
       Serial.println(menu);
       Serial.println(option1);
 
-      
       pwm.setPWM(servo_mg[0],0,180);
       pwm.setPWM(servo_mg[1],0,400);
       delay(1000);
